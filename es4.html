@@ -1,0 +1,31 @@
+<h1>es3d</h1>
+<script>
+let val1 = 10;
+let val2 = "Ciao";
+let val3 = null;
+let val4 = { nome: "Mario" };
+let val5 = function () {
+return "Sono una funzione";
+};
+function tipoDato(valore) {
+if (valore === null) {
+return "Ãe null";
+}
+switch (typeof valore) {
+case "number":
+return "e un numero"; 
+case "string":
+return "e una stringa";
+case "object":
+return "e un oggetto";
+case "function":
+return "e una funzione";
+default:
+return "Tipo non riconosciuto";
+}}
+console.log(tipoDato(val1));
+console.log(tipoDato(val2));
+console.log(tipoDato(val3));
+console.log(tipoDato(val4));
+console.log(tipoDato(val5));
+</script>
