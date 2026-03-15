@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Calcolatrice Semplice</title>
+</head>
+<body>
+    <h1>Calcolatrice</h1>
+    <form id="formularioCalcolatrice" onsubmit="calcola(); return false;">
+        Primo numero: <input type="text" id="primoValore" required><br>
+        Secondo numero: <input type="text" id="secondoValore" required><br>
+        Operazione: <input type="text" id="operatore" placeholder="+, -, *, /, **" required><br>
+        <button type="submit">Calcola</button>
+    </form>
+    <!-- Div per visualizzare il risultato o gli errori -->
+    <div id="esito"></div>
+    <script>
+        // Funzione chiamata al submit del form
+        function calcola() {
+            // Legge i valori inseriti dall'utente
+            const primoInserimento = document.getElementById('primoValore').value;
+            const secondoInserimento = document.getElementById('secondoValore').value;
+            const operatore = document.getElementById('operatore').value.trim(); // trim() rimuove spazi iniziali/finali
+            const contenitoreEsito = document.getElementById('esito'); // Div per il risultato
+            // Converte i valori in numeri decimali
+            const primoNumero = parseFloat(primoInserimento);
+            const secondoNumero = parseFloat(secondoInserimento);
+            // Verifica se i numeri sono validi
+            if (Number.isNaN(primoNumero) || Number.isNaN(secondoNumero)) {
+                contenitoreEsito.textContent = 'Errore: Inserisci due numeri validi.';
+                return; // Esce dalla funzione se i numeri non sono validi
+            }
+            let esito; // Variabile per il risultato
+            try {
+                if (operatore === "+") {
+                    esito = primoNumero + secondoNumero;
+                }
+                else if (operatore === "-") {
+                    esito = primoNumero - secondoNumero;
+                }
+                else if (operatore === "*") {
+                    esito = primoNumero * secondoNumero;
+                }
+                else if (operatore === "/") {
+                    if (secondoNumero === 0) {
+                        throw new Error("Divisione per zero");
+                    }
+                    esito = primoNumero / secondoNumero;
+                }
+                else if (operatore === "**") {
+                    esito = primoNumero ** secondoNumero;
+                }
+                // caso nessun operatore
+                else {
+                    throw new Error("Operazione non valida");
+                }
+
+                contenitoreEsito.textContent = 'Risultato: ' + esito;
+            } catch (errore) {
+                // Mostra l'errore se si verifica un problema
+                contenitoreEsito.textContent = 'Errore: ' + errore.message;
+            }
+        }
+    </script>
+</body>
+</html>
