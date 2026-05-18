@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tavola Pitagorica</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      background-color: #fff7ed;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 24px;
+      color: #9a3412;
+    }
+
+    table {
+      border-collapse: collapse;
+      background-color: #fffbeb;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    th {
+      background-color: #ea580c;
+      color: #ffffff;
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #fb923c;
+    }
+
+    td {
+      border: 1px solid #fdba74;
+      padding: 10px 14px;
+      text-align: center;
+      font-size: 14px;
+      color: #7c2d12;
+      background-color: #fff7ed;
+    }
+
+    /* Righe dispari evidenziate */
+    tr.evidenziato td {
+      background-color: #fed7aa;
+      color: #9a3412;
+      font-weight: 600;
+    }
+
+    .scritta {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #7c2d12;
+      background-color: #ffedd5;
+      padding: 10px 18px;
+      border-radius: 8px;
+      border: 1px solid #fdba74;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Tavola Pitagorica 10×10</h1>
+
+  <table id="pitagorica"></table>
+
+  <div class="scritta">
+    Tavola pitagorica con righe dispari evidenziate
+  </div>
+
+  <script>
+    const table = document.getElementById('pitagorica');
+
+    // --- Riga di intestazione ---
+    const thead = document.createElement('tr');
+
+    // Cella angolo
+    const thVuota = document.createElement('th');
+    thVuota.textContent = '×';
+    thead.appendChild(thVuota);
+
+    // Intestazioni colonne
+    for (let c = 1; c <= 10; c++) {
+      const th = document.createElement('th');
+      th.textContent = c;
+      thead.appendChild(th);
+    }
+
+    table.appendChild(thead);
+
+    // --- Righe della tabella ---
+    for (let r = 1; r <= 10; r++) {
+      const tr = document.createElement('tr');
+
+      // Evidenzia righe dispari
+      if (r % 2 !== 0) {
+        tr.setAttribute('class', 'evidenziato');
+      }
+
+      // Intestazione riga
+      const th = document.createElement('th');
+      th.textContent = r;
+      tr.appendChild(th);
+
+      // Celle con moltiplicazioni
+      for (let c = 1; c <= 10; c++) {
+        const td = document.createElement('td');
+        td.textContent = r * c;
+        tr.appendChild(td);
+      }
+
+      table.appendChild(tr);
+    }
+  </script>
+
+</body>
+</html>
