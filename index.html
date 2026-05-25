@@ -1,0 +1,584 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Alessio Capuni — Esercizi TPS</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #111318;
+      --surface2: #181c24;
+      --border: rgba(255,255,255,0.07);
+      --accent: #00e5ff;
+      --accent2: #7c3aed;
+      --done: #22c55e;
+      --text: #dde3f0;
+      --muted: #5a6278;
+      --radius: 16px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg); color: var(--text);
+      min-height: 100vh; overflow-x: hidden;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.025) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: ''; position: fixed; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,229,255,0.06) 0%, transparent 60%);
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative; z-index: 10;
+      padding: 44px 48px 0;
+      max-width: 1100px; margin: 0 auto;
+    }
+    .breadcrumb {
+      font-size: .7rem; color: var(--muted);
+      letter-spacing: .12em; text-transform: uppercase;
+      opacity: 0; animation: fadeUp .5s .1s ease forwards;
+    }
+    .breadcrumb span { color: var(--accent); }
+
+    .title-row {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 24px;
+      flex-wrap: wrap; margin-top: 14px;
+      opacity: 0; animation: fadeUp .6s .2s ease forwards;
+    }
+    .big-title h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 800; letter-spacing: -.03em; line-height: 1;
+    }
+    .big-title h1 .accent {
+      color: var(--accent); text-shadow: 0 0 28px rgba(0,229,255,.4);
+    }
+    .student-line {
+      font-size: .72rem; color: var(--muted);
+      letter-spacing: .1em; text-transform: uppercase; margin-top: 8px;
+    }
+    .student-line strong {
+      color: var(--text); text-transform: none;
+      letter-spacing: 0; font-size: .85rem;
+    }
+
+    .counter-main {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 18px 28px; text-align: center;
+      align-self: flex-start;
+    }
+    .counter-val {
+      font-family: 'Syne', sans-serif; font-size: 2.8rem;
+      font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .counter-lbl {
+      font-size: .65rem; color: var(--muted);
+      letter-spacing: .1em; text-transform: uppercase; margin-top: 4px;
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap {
+      position: relative; z-index: 10;
+      max-width: 1100px; margin: 28px auto 0; padding: 0 48px;
+      opacity: 0; animation: fadeUp .6s .32s ease forwards;
+    }
+    .search-inner {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 10px; padding: 10px 16px;
+      max-width: 300px; transition: border-color .2s;
+    }
+    .search-inner:focus-within { border-color: var(--accent); }
+    .search-inner input {
+      background: none; border: none; outline: none;
+      color: var(--text); font-family: 'JetBrains Mono', monospace;
+      font-size: .8rem; width: 100%;
+    }
+    .search-inner input::placeholder { color: var(--muted); }
+
+    /* ── CARDS GRID ── */
+    .cards-wrap {
+      position: relative; z-index: 10;
+      max-width: 1100px; margin: 28px auto 0; padding: 0 48px 80px;
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 16px;
+    }
+
+    /* MAIN CARD */
+    .main-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 24px 22px;
+      cursor: pointer; display: flex; flex-direction: column; gap: 14px;
+      position: relative; overflow: hidden;
+      transition: transform .22s ease, border-color .22s, box-shadow .22s;
+      opacity: 0; animation: fadeUp .5s ease forwards;
+    }
+    .main-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0,229,255,.22);
+      box-shadow: 0 18px 44px rgba(0,0,0,.55);
+    }
+    .main-card::before {
+      content: ''; position: absolute;
+      top: -40px; right: -40px;
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--accent); opacity: 0;
+      filter: blur(38px); transition: opacity .3s;
+    }
+    .main-card:hover::before { opacity: .07; }
+
+    .mc-id {
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+    }
+    .mc-icon { font-size: 1.9rem; }
+    .mc-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.12rem; font-weight: 800; line-height: 1.2;
+    }
+    .mc-desc { font-size: .78rem; color: var(--muted); line-height: 1.65; }
+    .mc-footer {
+      margin-top: auto; display: flex;
+      align-items: center; justify-content: space-between;
+    }
+    .mc-subs { display: flex; gap: 5px; flex-wrap: wrap; }
+    .mc-sub-pill {
+      font-size: .62rem; font-weight: 700;
+      padding: 3px 8px; border-radius: 6px;
+      background: var(--surface2); border: 1px solid var(--border);
+      color: var(--muted); letter-spacing: .06em; text-transform: uppercase;
+    }
+    .mc-open {
+      font-size: .72rem; color: var(--accent);
+      opacity: 0; transform: translateX(-5px);
+      transition: opacity .2s, transform .2s;
+    }
+    .main-card:hover .mc-open { opacity: 1; transform: translateX(0); }
+
+    /* ── POPUP ── */
+    .popup-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,.82); backdrop-filter: blur(14px);
+      z-index: 200; display: flex;
+      align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none; transition: opacity .25s;
+    }
+    .popup-overlay.open { opacity: 1; pointer-events: all; }
+
+    .popup {
+      background: var(--surface);
+      border: 1px solid rgba(0,229,255,.14);
+      border-radius: 22px; padding: 0;
+      max-width: 540px; width: 92vw;
+      max-height: 86vh; overflow: hidden;
+      display: flex; flex-direction: column;
+      transform: scale(.92) translateY(18px);
+      transition: transform .3s ease;
+    }
+    .popup-overlay.open .popup { transform: scale(1) translateY(0); }
+
+    .popup-head {
+      padding: 26px 28px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 16px;
+      flex-shrink: 0;
+    }
+    .popup-eid {
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 4px;
+    }
+    .popup-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.4rem; font-weight: 800; letter-spacing: -.02em;
+    }
+    .popup-subdesc {
+      font-size: .77rem; color: var(--muted);
+      line-height: 1.6; margin-top: 5px;
+    }
+    .popup-close {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; width: 32px; height: 32px;
+      color: var(--muted); font-size: .9rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all .2s; flex-shrink: 0;
+    }
+    .popup-close:hover { border-color: var(--accent); color: var(--accent); }
+
+    .popup-body {
+      padding: 20px 28px 26px;
+      overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
+    }
+
+    /* SUB CARD — fully clickable */
+    .sub-card {
+      display: flex; flex-direction: column; gap: 10px;
+      text-decoration: none; color: inherit;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 20px 16px;
+      position: relative; overflow: hidden;
+      transition: transform .2s ease, border-color .2s, box-shadow .2s;
+    }
+    .sub-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(0,229,255,0.04), transparent 60%);
+      opacity: 0; transition: opacity .25s;
+    }
+    .sub-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(0,229,255,.32);
+      box-shadow: 0 12px 32px rgba(0,0,0,.45);
+    }
+    .sub-card:hover::after { opacity: 1; }
+    .sub-card:active { transform: scale(.98); }
+
+    .sub-card-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 12px;
+    }
+    .sub-card-id {
+      font-size: .68rem; font-weight: 700;
+      letter-spacing: .13em; text-transform: uppercase; color: var(--accent);
+    }
+    .sub-card-arrow {
+      font-size: .85rem; color: var(--accent);
+      opacity: 0; transform: translate(-4px, 4px);
+      transition: opacity .2s, transform .2s; flex-shrink: 0;
+    }
+    .sub-card:hover .sub-card-arrow { opacity: 1; transform: translate(0, 0); }
+
+    .sub-card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: .98rem; font-weight: 800; line-height: 1.25;
+    }
+    .sub-card-desc {
+      font-size: .76rem; color: var(--muted); line-height: 1.7;
+    }
+    .sub-card-bottom {
+      display: flex; align-items: center;
+      justify-content: space-between; gap: 8px; flex-wrap: wrap;
+    }
+    .sub-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .stag {
+      font-size: .58rem; font-weight: 500;
+      padding: 2px 7px; border-radius: 99px;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); letter-spacing: .05em; text-transform: uppercase;
+    }
+    .stag.hard { color: #f87171; border-color: rgba(248,113,113,.2); }
+    .stag.med  { color: #fbbf24; border-color: rgba(251,191,36,.2); }
+    .stag.easy { color: var(--done); border-color: rgba(34,197,94,.2); }
+
+    .sub-link-label {
+      font-size: .67rem; color: var(--accent2);
+      font-weight: 600; letter-spacing: .03em;
+      display: flex; align-items: center; gap: 4px;
+      opacity: .7; transition: opacity .2s;
+      max-width: 200px; overflow: hidden;
+      text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sub-card:hover .sub-link-label { opacity: 1; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 10;
+      border-top: 1px solid var(--border);
+      padding: 22px 48px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: .68rem; color: var(--muted); letter-spacing: .06em;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      header, .search-wrap, .cards-wrap { padding-left: 20px; padding-right: 20px; }
+      footer { padding: 18px 20px; flex-direction: column; gap: 8px; text-align: center; }
+      .title-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="breadcrumb">Superiori › Tecnico › <span>TPS</span></div>
+  <div class="title-row">
+    <div class="big-title">
+      <h1><span class="accent">Alessio Capuni</span><br>Esercizi TPS</h1>
+      <div class="student-line">Studente: <strong>Alessio Capuni</strong></div>
+    </div>
+    <div class="counter-main">
+      <div class="counter-val" id="cTotal">16</div>
+      <div class="counter-lbl">esercizi totali</div>
+    </div>
+  </div>
+</header>
+
+<!-- ── SEARCH ── -->
+<div class="search-wrap">
+  <div class="search-inner">
+    <span style="color:var(--muted)">⌕</span>
+    <input type="text" id="searchInput" placeholder="Cerca es03, boole, C…" />
+  </div>
+</div>
+
+<!-- ── CARDS ── -->
+<div class="cards-wrap">
+  <div class="cards-grid" id="cardsGrid"></div>
+</div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <span>Alessio Capuni — TPS Esercizi</span>
+  <span>9 esercizi totali</span>
+</footer>
+
+<!-- ── POPUP ── -->
+<div class="popup-overlay" id="popupOverlay">
+  <div class="popup">
+    <div class="popup-head">
+      <div>
+        <div class="popup-eid" id="p-eid"></div>
+        <div class="popup-title" id="p-title"></div>
+        <div class="popup-subdesc" id="p-desc"></div>
+      </div>
+      <button class="popup-close" onclick="closePopup()">✕</button>
+    </div>
+    <div class="popup-body" id="p-body"></div>
+  </div>
+</div>
+
+<script>
+  const exercises = [
+    {
+      id: "es03", icon: "", title: "Le basi del linguaggio Javascript ",
+      desc: "Introduzione al linguaggio e ai tipi di dati.",
+      subs: [
+        {
+          sub: "a", title: "Volume Scatola", diff: "easy", tags: ["and","or","not"],
+          desc: "Calcolo volume di una scatola con Java Script.",
+          link: { label: "Volume Scatola", href: "lavori/es1.html" }
+        },
+        {
+          sub: "b", title: "Assi cartesiani", diff: "med", tags: ["karnaugh","semplif."],
+          desc: "Calcolo valore di Y in “y = mx + c” e intersezione con gli assi cartesiani.",
+          link: { label: "Assi cartesiani", href: "lavori/es2.html" }
+        },
+        {
+          sub: "c", title: "Promosso O Bocciato", diff: "hard", tags: ["nand","nor"],
+          desc: "Assegnazione stato di promozione o bocciatura in base al voto utilizzando operatore ternario in Java Scipt.",
+          link: { label: "Promosso O Bocciato", href: "lavori/es3.html" }
+        },
+        {
+          sub: "d", title: "Tipo Di Dato", diff: "hard", tags: ["mux","decoder"],
+          desc: "Determina il tipo di dato in Java Script.",
+          link: { label: "Tipo di Dato", href: "lavori/es4.html" }
+        },
+      ]
+    },
+    {
+      id: "es04", icon: "", title: "Istruzioni decisionali e cicli in Javascript",
+      desc: "Istruzioni decisionali e iterative in Javascript e utilizzo di NodeJs.",
+      subs: [
+        {
+          sub: "a", title: "Passaggio di parametri tramite linea di comando allo script", diff: "easy", tags: ["osi","strati"],
+          desc: "sviluppare una semplice calcolatrice utilizzando JavaScript con Note.js, capace di effettuare operazioni matematiche tramite parametri inseriti.",
+          link: { label: "Passaggio di parametri", href: "https://github.com/Alefrl/Capuni_web/blob/main/process.argv/calc.js" }
+        },
+        {
+          sub: "b", title: "For dal 100 fino a 0 ogni ciclo -20", diff: "med", tags: ["ip","subnet"],
+          desc: "L'obiettivo dell'esercizio utilizzare un ciclo for in JavaScript per stampare una sequenza di numeri in ordine decrescente. ",
+          link: { label: "For dal 100 fino a 0 ogni ciclo -20", href: "https://github.com/Alefrl/Capuni_web/blob/main/process.argv/for.js" }
+        },
+        {
+          sub: "c", title: "Calcolatrice online", diff: "hard", tags: ["socket","c"],
+          desc: "creare una semplice calcolatrice web utilizzando JavaScript. Il programma consente all’utente di inserire due numeri e un operatore per svolgere varie operazioni matematiche.",
+          link: { label: "Calcolatrice online", href: "lavori/process.argv/calcolatrice.html" }
+        },
+      ]
+    },
+    {
+      id: "es05", icon: "", title: "Il tipo dato Oggetto",
+      desc: "Introduzione al linguaggio di programmazione JavaScript attraverso semplici esercizi",
+      subs: [
+        {
+          sub: "a", title: "Oggetto Persona", diff: "easy", tags: ["printf","scanf"],
+          desc: "realizzare un oggetto in JavaScript che rappresenti una persona, con attributi come nome, cognome ed età, e visualizzare tali dati nella console.",
+          link: { label: "Oggetto Persona", href: "lavori/es05a.html" }
+        },
+        {
+          sub: "b", title: "Oggetto Libro", diff: "med", tags: ["array","puntatori"],
+          desc: "creare un oggetto in JavaScript che rappresenti un libro",
+          link: { label: "Oggetto Libro", href: "https://github.com/Alefrl/Capuni_web/blob/main/es05b.js" }
+        },
+      ]
+    },{
+      id: "es06", icon: "", title: "Le funzioni, concetti di base",
+      desc: "Uso di funzioni e vari concetti base",
+      subs: [
+        {
+          sub: "a", title: "Calcolatrice", diff: "easy", tags: ["osi","strati"],
+          desc: "Applicazione che prende due numeri e un�operazione, esegue il calcolo se l�input valido, altrimenti mostra un errore.",
+          link: { label: "calcolatrice", href: "https://github.com/Alefrl/Capuni_web/blob/main/es06a.js" }
+        },
+        {
+          sub: "b", title: "inverti cifre", diff: "med", tags: ["ip","subnet"],
+          desc: "Funzione che prende un numero intero e restituisce lo stesso numero con le cifre invertite.",
+          link: { label: "Funzione inverti cifre", href: "https://github.com/Alefrl/Capuni_web/blob/main/es06b.js" }
+        },
+        {
+          sub: "c", title: "Triangolo di Tartaglia", diff: "hard", tags: ["socket","c"],
+          desc: "Descrive il triangolo di Tartaglia e richiede una funzione JavaScript che lo stampi in console, formattato e centrato in base alle righe.",
+          link: { label: "Triangolo di Tartaglia", href: "https://github.com/Alefrl/Capuni_web/blob/main/es06c.js" }
+        },
+      ]
+    },
+ {
+      id: "es07", icon: "", title: "Introduzione al DOM e gestione dei nodi ",
+      desc: "Introduzione al linguaggio di programmazione JavaScript attraverso semplici esercizi",
+      subs: [
+        {
+          sub: "a", title: " visualizzare proprieta� oggetto window", diff: "easy", tags: ["and","or","not"],
+          desc: "Creare uno script che visualizza le proprietaà principali dell’oggetto windows",
+          link: { label: "proprieta", href: "lavori/window.html" }
+        },
+        {
+          sub: "b", title: "visualizzare proprieta oggetto navigator", diff: "med", tags: ["karnaugh","semplif."],
+          desc: "Creare uno script che visualizza le proprieta� principali dell’oggetto navigator",
+          link: { label: "proprieta", href: "lavori/navigatore.html" }
+        },
+        {
+          sub: "c", title: "modificare il colore dell pulsante", diff: "hard", tags: ["nand","nor"],
+          desc: "cambiare il colore base dell pulsante tramite js",
+          link: { label: "Cambio colore", href: "lavori/button.html" }
+        },
+        {
+          sub: "d", title: "Testo in Maiuscolo", diff: "hard", tags: ["mux","decoder"],
+          desc: "Convertire il testo in maiuscolo di una casella di testo",
+          link: { label: "Testo in maiuscolo", href: "lavori/maiuscolo.html" }
+        },
+	 {
+          sub: "e", title: "creare una tavola pitagorica ", diff: "hard", tags: ["mux","decoder"],
+          desc: "creare una tavola pitagorica in html con appendchild e create elent e avere le righe dispari con un colore differente traite setattribute",
+          link: { label: "Pitagora", href: "lavori/tavola.html" }
+        },
+      ]
+    },
+  ];
+
+  function renderCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const grid = document.getElementById('cardsGrid');
+    grid.innerHTML = '';
+    const filtered = q
+      ? exercises.filter(ex =>
+          ex.id.includes(q) || ex.title.toLowerCase().includes(q) ||
+          ex.desc.toLowerCase().includes(q) ||
+          ex.subs.some(s =>
+            s.title.toLowerCase().includes(q) ||
+            s.tags.some(t => t.includes(q)) ||
+            (ex.id + s.sub).includes(q)
+          ))
+      : exercises;
+
+    if (!filtered.length) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--muted);font-size:.85rem"><div style="font-size:2rem;margin-bottom:12px">🔍</div>Nessun risultato.</div>';
+      return;
+    }
+
+    filtered.forEach((ex, i) => {
+      const card = document.createElement('div');
+      card.className = 'main-card';
+      card.style.animationDelay = `${i * 0.09}s`;
+      const pillsHtml = ex.subs.map(s =>
+        `<span class="mc-sub-pill">${ex.id}${s.sub}</span>`
+      ).join('');
+      card.innerHTML = `
+        <div class="mc-id">${ex.id}</div>
+        <div class="mc-title">${ex.title}</div>
+        <div class="mc-desc">${ex.desc}</div>
+        <div class="mc-footer">
+          <div class="mc-subs">${pillsHtml}</div>
+          <span class="mc-open">Apri →</span>
+        </div>
+      `;
+      card.addEventListener('click', () => openPopup(ex));
+      grid.appendChild(card);
+    });
+  }
+
+  function openPopup(ex) {
+    document.getElementById('p-eid').textContent = ex.id;
+    document.getElementById('p-title').textContent = ex.title;
+    document.getElementById('p-desc').textContent = ex.desc;
+
+    const body = document.getElementById('p-body');
+    body.innerHTML = '';
+
+    ex.subs.forEach(s => {
+      const fullId = ex.id + s.sub;
+      const card = document.createElement('a');
+      card.className = 'sub-card';
+      card.href = s.link.href;
+      card.target = '_blank';
+      card.rel = 'noopener noreferrer';
+      card.innerHTML = `
+        <div class="sub-card-top">
+          <div class="sub-card-id">${fullId}</div>
+          <div class="sub-card-arrow">↗</div>
+        </div>
+        <div class="sub-card-title">${s.title}</div>
+        <div class="sub-card-desc">${s.desc}</div>
+        <div class="sub-card-bottom">
+          <div class="sub-link-label">${s.link.label} ↗</div>
+        </div>
+      `;
+      body.appendChild(card);
+    });
+
+    document.getElementById('popupOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePopup() {
+    document.getElementById('popupOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('popupOverlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('popupOverlay')) closePopup();
+  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePopup(); });
+  document.getElementById('searchInput').addEventListener('input', renderCards);
+
+  renderCards();
+</script>
+</body>
+</html>
