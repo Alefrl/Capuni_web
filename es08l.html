@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08l - Nuova password diversa</title>
+  <style>
+    .err { color: red; font-size: 0.9em; }
+    .ok  { color: green; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h3>l) Nuova password diversa dalla precedente</h3>
+  <input type="password" id="pwdVecchia" placeholder="password attuale"><br><br>
+  <input type="password" id="pwdNuova" placeholder="nuova password">
+  <span id="msg"></span>
+
+  <script>
+    document.getElementById('pwdNuova').addEventListener('input', function() {
+      const vecchia = document.getElementById('pwdVecchia').value;
+      const msg = document.getElementById('msg');
+      if (this.value.length === 0) {
+        msg.textContent = '';
+      } else if (this.value === vecchia) {
+        msg.className = 'err';
+        msg.textContent = 'La nuova password è uguale alla precedente!';
+      } else {
+        msg.className = 'ok';
+        msg.textContent = '✅ Password diversa.';
+      }
+    });
+  </script>
+</body>
+</html>

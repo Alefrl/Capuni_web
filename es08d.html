@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08d - Nascondi testo</title>
+</head>
+<body>
+  <h3>d) Nascondi testo</h3>
+  <p id="testo">Sono visibile!</p>
+  <button id="btn">Nascondi</button>
+
+  <script>
+    document.getElementById('btn').addEventListener('click', function() {
+      document.getElementById('testo').hidden = true;
+    });
+  </script>
+</body>
+</html>

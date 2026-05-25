@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08f - Sfondo password</title>
+</head>
+<body>
+  <h3>f) Colore sfondo password in base ai requisiti</h3>
+  <input type="password" id="pwd" placeholder="password">
+
+  <script>
+    document.getElementById('pwd').addEventListener('input', function() {
+      const pwd = this.value;
+      let score = 0;
+      if (pwd.length >= 8)          score++;
+      if (/[A-Z]/.test(pwd))        score++;
+      if (/[a-z]/.test(pwd))        score++;
+      if (/[0-9]/.test(pwd))        score++;
+      if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+      const sfondi = ['', '#ffcccc', '#ffddaa', '#ffffaa', '#ccffcc', '#aaffaa'];
+      this.style.background = sfondi[score];
+    });
+  </script>
+</body>
+</html>

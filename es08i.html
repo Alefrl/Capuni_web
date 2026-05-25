@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08i - Genera email</title>
+</head>
+<body>
+  <h3>i) Genera email nome.cognome@dominio.it</h3>
+  <input id="nome" placeholder="nome">
+  <input id="cognome" placeholder="cognome">
+  <button id="btn">Genera</button>
+  <p id="email"></p>
+
+  <script>
+    document.getElementById('btn').addEventListener('click', function() {
+      const nome = document.getElementById('nome').value.trim();
+      const cognome = document.getElementById('cognome').value.trim();
+      document.getElementById('email').textContent =
+        nome && cognome ? nome + '.' + cognome + '@dominio.it' : '';
+    });
+  </script>
+</body>
+</html>

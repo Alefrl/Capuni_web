@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08e - Verifica password</title>
+  <style>
+    .err { color: red; font-size: 0.9em; }
+  </style>
+</head>
+<body>
+  <h3>e) Verifica password</h3>
+  <input type="password" id="pwd" placeholder="password"><br><br>
+  <input type="password" id="rpwd" placeholder="ripeti password">
+  <span id="errPwd" class="err"></span>
+
+  <script>
+    document.getElementById('rpwd').addEventListener('input', function() {
+      const p1 = document.getElementById('pwd').value;
+      const err = document.getElementById('errPwd');
+      err.textContent = (this.value.length > 0 && this.value !== p1)
+        ? 'Le password non coincidono!'
+        : '';
+    });
+  </script>
+</body>
+</html>

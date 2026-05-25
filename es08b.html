@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08b - Codice fiscale maiuscolo</title>
+</head>
+<body>
+  <h3>b) Codice fiscale maiuscolo</h3>
+  <input id="cf" placeholder="codice fiscale">
+
+  <script>
+    document.getElementById('cf').addEventListener('input', function() {
+      this.value = this.value.toUpperCase();
+    });
+  </script>
+</body>
+</html>

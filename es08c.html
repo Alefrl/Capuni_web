@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08c - Focus e Blur</title>
+</head>
+<body>
+  <h3>c) Focus / Blur</h3>
+  <input id="foc" placeholder="clicca qui">
+
+  <script>
+    document.getElementById('foc').addEventListener('focus', function() {
+      this.style.background = '#ffe0fb';
+    });
+    document.getElementById('foc').addEventListener('blur', function() {
+      this.style.background = '';
+    });
+  </script>
+</body>
+</html>

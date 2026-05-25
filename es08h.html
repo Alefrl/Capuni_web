@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08h - Forza password</title>
+  <style>
+    #progress { height: 12px; background: #ddd; width: 250px; margin-top: 6px; }
+    #bar { height: 12px; width: 0; transition: width 0.3s, background 0.3s; }
+  </style>
+</head>
+<body>
+  <h3>h) Forza password con progress bar</h3>
+  <input type="password" id="pwd" placeholder="password">
+  <div id="progress"><div id="bar"></div></div>
+  <div id="output" style="font-size:0.85em;margin-top:6px"></div>
+
+  <script>
+    document.getElementById('pwd').addEventListener('input', function() {
+      const pwd = this.value;
+      let score = 0;
+      const requisiti = [
+        [pwd.length >= 8,          '✅ Lunghezza ≥ 8',       '❌ Lunghezza < 8'],
+        [/[A-Z]/.test(pwd),       '✅ Maiuscole presenti',   '❌ Nessuna maiuscola'],
+        [/[a-z]/.test(pwd),       '✅ Minuscole presenti',   '❌ Nessuna minuscola'],
+        [/[0-9]/.test(pwd),       '✅ Numeri presenti',      '❌ Nessun numero'],
+        [/[^A-Za-z0-9]/.test(pwd),'✅ Caratteri speciali',   '❌ Nessun carattere speciale'],
+      ];
+      const righe = requisiti.map(function(r) { if (r[0]) score++; return r[0] ? r[1] : r[2]; });
+
+      const colori = ['#ccc', '#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#27ae60'];
+      const bar = document.getElementById('bar');
+      bar.style.width = (score / 5 * 100) + '%';
+      bar.style.background = colori[score];
+
+      document.getElementById('output').innerHTML = righe.join('<br>');
+    });
+  </script>
+</body>
+</html>

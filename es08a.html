@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Es 08a - Hover pulsanti</title>
+</head>
+<body>
+  <h3>a) Hover pulsanti</h3>
+  <button>Pulsante 1</button>
+  <button>Pulsante 2</button>
+  <button>Pulsante 3</button>
+
+  <script>
+    document.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('mouseover', function() {
+        btn.style.background = 'orange';
+        btn.style.color = 'white';
+      });
+      btn.addEventListener('mouseout', function() {
+        btn.style.background = '';
+        btn.style.color = '';
+      });
+    });
+  </script>
+</body>
+</html>
